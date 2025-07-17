@@ -1,0 +1,148 @@
+{
+  "app": {
+    "title": "Privacy Guardian",
+    "description": "Detect and analyze your browser's privacy and security status",
+    "tagline": "Your Digital Privacy Companion"
+  },
+  "navigation": {
+    "home": "Home",
+    "results": "Results",
+    "history": "History",
+    "resources": "Resources",
+    "guide": "User Guide",
+    "education": "Privacy Education",
+    "faq": "FAQ",
+    "design": "Design System",
+    "about": "About"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "language": {
+    "english": "English",
+    "chinese": "中文",
+    "switch": "Switch Language"
+  },
+  "detection": {
+    "start": "Start Privacy Detection",
+    "starting": "Starting Detection...",
+    "inProgress": "Detection in Progress...",
+    "completed": "Detection Completed",
+    "failed": "Detection Failed",
+    "retry": "Retry Detection",
+    "reset": "Reset Detection",
+    "results": "Detection Results",
+    "score": "Privacy Score",
+    "level": "Security Level",
+    "timestamp": "Detected at"
+  },
+  "security": {
+    "level": {
+      "high": "High Security",
+      "medium": "Medium Security", 
+      "low": "Low Security"
+    },
+    "score": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "fair": "Fair",
+      "poor": "Poor"
+    }
+  },
+  "categories": {
+    "ip": "IP Detection",
+    "webrtc": "WebRTC Detection", 
+    "dns": "DNS Detection",
+    "ipv6": "IPv6 Detection",
+    "fingerprint": "Browser Fingerprint",
+    "browser": "Browser Analysis"
+  },
+  "results": {
+    "ip": {
+      "title": "IP Address Detection",
+      "clientIP": "Client IP",
+      "isConsistent": "IP Consistency",
+      "isVPN": "VPN Detected",
+      "isProxy": "Proxy Detected", 
+      "isTor": "Tor Detected",
+      "location": "Location",
+      "isp": "ISP Provider"
+    },
+    "webrtc": {
+      "title": "WebRTC Leak Detection",
+      "hasLeak": "Leak Detected",
+      "localIPs": "Local IP Addresses",
+      "publicIPs": "Public IP Addresses",
+      "noLeak": "No WebRTC Leak Detected",
+      "leakDetected": "WebRTC Leak Detected"
+    },
+    "dns": {
+      "title": "DNS Leak Detection",
+      "hasDNSLeak": "DNS Leak",
+      "dnsServers": "DNS Servers",
+      "isUsingVPNDNS": "Using VPN DNS",
+      "noLeak": "No DNS Leak Detected",
+      "leakDetected": "DNS Leak Detected"
+    },
+    "ipv6": {
+      "title": "IPv6 Detection",
+      "isIPv6Disabled": "IPv6 Disabled",
+      "hasIPv6Leak": "IPv6 Leak",
+      "ipv6Addresses": "IPv6 Addresses",
+      "noLeak": "No IPv6 Leak Detected", 
+      "leakDetected": "IPv6 Leak Detected"
+    },
+    "fingerprint": {
+      "title": "Browser Fingerprint",
+      "uniquenessScore": "Uniqueness Score",
+      "canvasFingerprint": "Canvas Fingerprint",
+      "webglFingerprint": "WebGL Fingerprint",
+      "audioFingerprint": "Audio Fingerprint",
+      "fontFingerprint": "Font Detection",
+      "screenFingerprint": "Screen Properties"
+    },
+    "browser": {
+      "title": "Browser Analysis",
+      "userAgent": "User Agent",
+      "platform": "Platform",
+      "language": "Language",
+      "timezone": "Timezone",
+      "cookiesEnabled": "Cookies Enabled",
+      "doNotTrack": "Do Not Track"
+    }
+  },
+  "export": {
+    "pdf": "Export PDF Report",
+    "generating": "Generating PDF...",
+    "success": "PDF exported successfully",
+    "error": "Failed to export PDF",
+    "filename": "Privacy Report"
+  },
+  "status": {
+    "yes": "Yes",
+    "no": "No",
+    "enabled": "Enabled", 
+    "disabled": "Disabled",
+    "detected": "Detected",
+    "notDetected": "Not Detected",
+    "unknown": "Unknown",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "actions": {
+    "viewDetails": "View Details",
+    "hideDetails": "Hide Details",
+    "copy": "Copy",
+    "share": "Share",
+    "download": "Download",
+    "refresh": "Refresh"
+  },
+  "toast": {
+    "copied": "Copied to clipboard",
+    "error": "An error occurred",
+    "success": "Operation completed successfully"
+  }
+}

@@ -33,17 +33,30 @@ export async function GET(_request: NextRequest) {
     const isVPN = detectedIPs.length > 1 && 
       new Set(detectedIPs.map(item => item.ip)).size > 1
 
-    // 获取位置信息（使用免费的IP-API服务）
+    // 获取位置信息（使用HTTPS的ipapi.co服务）
     let location = undefined
+    let vpnInfo = undefined
     if (detectedIPs.length > 0) {
       try {
-        const geoResponse = await fetch(`http://ip-api.com/json/${detectedIPs[0].ip}`)
+        const geoResponse = await fetch(`https://ipapi.co/${detectedIPs[0].ip}/json/`)
         const geoData = await geoResponse.json()
-        if (geoData.status === 'success') {
+        if (!geoData.error) {
           location = {
-            country: geoData.country,
+            country: geoData.country_name,
+            countryCode: geoData.country_code,
             city: geoData.city,
-            region: geoData.regionName
+            region: geoData.region,
+            timezone: geoData.timezone,
+            latitude: geoData.latitude,
+            longitude: geoData.longitude,
+            isp: geoData.org
+          }
+          // ipapi.co提供VPN检测
+          vpnInfo = {
+            isVPN: geoData.vpn || false,
+            isProxy: geoData.proxy || false,
+            isTor: geoData.tor || false,
+            isHosting: geoData.hosting || false
           }
         }
       } catch (error) {
@@ -57,7 +70,10 @@ export async function GET(_request: NextRequest) {
         clientIP,
         detectedIPs,
         isConsistent: new Set(detectedIPs.map(item => item.ip)).size === 1,
-        isVPN,
+        isVPN: vpnInfo?.isVPN || isVPN,
+        isProxy: vpnInfo?.isProxy || false,
+        isTor: vpnInfo?.isTor || false,
+        isHosting: vpnInfo?.isHosting || false,
         location,
         timestamp: new Date().toISOString()
       }

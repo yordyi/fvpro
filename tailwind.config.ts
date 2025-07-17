@@ -8,6 +8,16 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    // 响应式断点
+    screens: {
+      'xs': '320px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1440px',
+      '3xl': '1920px',
+    },
     extend: {
       // 现代化设计系统 - 颜色
       colors: {
@@ -171,6 +181,26 @@ const config: Config = {
         'fade-in': {
           '0%': { 'opacity': '0' },
           '100%': { 'opacity': '1' },
+        },
+      },
+      
+      // 安全区域
+      padding: {
+        'safe-top': 'env(safe-area-inset-top)',
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'safe-left': 'env(safe-area-inset-left)',
+        'safe-right': 'env(safe-area-inset-right)',
+      },
+      
+      // 容器查询
+      container: {
+        center: true,
+        padding: {
+          DEFAULT: '1rem',
+          sm: '2rem',
+          lg: '4rem',
+          xl: '5rem',
+          '2xl': '6rem',
         },
       },
     },

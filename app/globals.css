@@ -1,67 +1,137 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;600&display=swap');
+@import "./responsive.css";
 
 :root {
-  /* 颜色系统 - 深蓝渐变背景 */
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-tertiary: #334155;
-  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  /* Apple Liquid Glass - Light Theme */
+  --bg-primary: rgba(255, 255, 255, 0.95);
+  --bg-secondary: rgba(249, 250, 251, 0.85);
+  --bg-tertiary: rgba(243, 244, 246, 0.75);
+  --bg-glass: rgba(255, 255, 255, 0.1);
+  --bg-glass-strong: rgba(255, 255, 255, 0.2);
+  --bg-gradient: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.95) 0%, 
+    rgba(240, 242, 255, 0.9) 50%,
+    rgba(245, 245, 250, 0.85) 100%);
   
-  /* 强调色 - 蓝色升级 */
-  --accent-primary: #6366f1;
-  --accent-secondary: #3b82f6;
-  --accent-hover: #4f46e5;
+  /* Apple-inspired accent colors */
+  --accent-primary: #007AFF;
+  --accent-secondary: #5856D6;
+  --accent-hover: #0051D2;
+  --accent-blue: #007AFF;
+  --accent-purple: #5856D6;
+  --accent-indigo: #5AC8FA;
+  --accent-mint: #00C7BE;
   
-  /* 语义颜色 */
-  --success: #10b981;
-  --success-light: #34d399;
-  --warning: #f59e0b;
-  --warning-light: #fbbf24;
-  --error: #ef4444;
-  --error-light: #f87171;
+  /* Semantic colors with Apple vibrancy */
+  --success: #30D158;
+  --success-light: #32D74B;
+  --warning: #FF9F0A;
+  --warning-light: #FFD60A;
+  --error: #FF453A;
+  --error-light: #FF6961;
   
-  /* 文本颜色 */
-  --text-primary: #ffffff;
-  --text-secondary: #e2e8f0;
-  --text-muted: #94a3b8;
-  --text-disabled: #64748b;
+  /* Text colors with improved contrast */
+  --text-primary: rgba(0, 0, 0, 0.9);
+  --text-secondary: rgba(0, 0, 0, 0.7);
+  --text-muted: rgba(0, 0, 0, 0.5);
+  --text-disabled: rgba(0, 0, 0, 0.3);
   
-  /* 边框颜色 */
-  --border-primary: #374151;
-  --border-secondary: #4b5563;
-  --border-muted: #6b7280;
+  /* Borders with transparency */
+  --border-primary: rgba(0, 0, 0, 0.08);
+  --border-secondary: rgba(0, 0, 0, 0.05);
+  --border-muted: rgba(0, 0, 0, 0.03);
+  --border-glass: rgba(255, 255, 255, 0.25);
+}
+
+/* Apple Liquid Glass - Dark Theme */
+[data-theme="dark"] {
+  --bg-primary: rgba(28, 28, 30, 0.95);
+  --bg-secondary: rgba(44, 44, 46, 0.85);
+  --bg-tertiary: rgba(58, 58, 60, 0.75);
+  --bg-glass: rgba(0, 0, 0, 0.1);
+  --bg-glass-strong: rgba(0, 0, 0, 0.2);
+  --bg-gradient: linear-gradient(135deg, 
+    rgba(28, 28, 30, 0.95) 0%, 
+    rgba(44, 44, 46, 0.9) 50%,
+    rgba(58, 58, 60, 0.85) 100%);
   
-  /* 间距系统 */
+  /* Apple dark mode accent colors */
+  --accent-primary: #0A84FF;
+  --accent-secondary: #5E5CE6;
+  --accent-hover: #0040DD;
+  --accent-blue: #0A84FF;
+  --accent-purple: #5E5CE6;
+  --accent-indigo: #64D2FF;
+  --accent-mint: #6AC4DC;
+  
+  /* Dark mode semantic colors */
+  --success: #30D158;
+  --success-light: #32D74B;
+  --warning: #FF9F0A;
+  --warning-light: #FFD60A;
+  --error: #FF453A;
+  --error-light: #FF6961;
+  
+  /* Dark mode text colors */
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.75);
+  --text-muted: rgba(255, 255, 255, 0.55);
+  --text-disabled: rgba(255, 255, 255, 0.35);
+  
+  /* Dark mode borders */
+  --border-primary: rgba(255, 255, 255, 0.08);
+  --border-secondary: rgba(255, 255, 255, 0.05);
+  --border-muted: rgba(255, 255, 255, 0.03);
+  --border-glass: rgba(255, 255, 255, 0.15);
+}
+
+/* Apple Design System Variables */
+:root, [data-theme="dark"] {
+  /* Spacing system - Apple's 8pt grid */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
   --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
   
-  /* 圆角系统 */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  /* Radius system - Apple's continuous curves */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-2xl: 36px;
   
-  /* 阴影系统 */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
-  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.3);
-  --shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  /* Apple-style shadows with multiple layers */
+  --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.10), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.10);
+  --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.20), 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.12), 
+                  0 1px 0px rgba(255, 255, 255, 0.05) inset,
+                  0 -1px 0px rgba(0, 0, 0, 0.05) inset;
   
-  /* 字体系统 */
-  --font-family-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-family-mono: 'Fira Code', 'Monaco', 'Consolas', monospace;
+  /* Typography - Apple's system fonts */
+  --font-family-heading: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif;
+  --font-family-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', sans-serif;
+  --font-family-mono: 'SF Mono', 'Monaco', 'Fira Code', 'Consolas', monospace;
   
-  /* 动画 */
-  --transition-fast: 0.15s ease-in-out;
-  --transition-normal: 0.3s ease-in-out;
-  --transition-slow: 0.5s ease-in-out;
+  /* Fluid animations - Apple's spring curves */
+  --transition-quick: 0.2s cubic-bezier(0.2, 0, 0, 1);
+  --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  --spring-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --spring-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  
+  /* Blur effects */
+  --blur-sm: 8px;
+  --blur-md: 16px;
+  --blur-lg: 24px;
+  --blur-xl: 40px;
 }
 
 @theme inline {
@@ -81,71 +151,252 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 设计系统组件样式 */
+/* Apple Liquid Glass Components */
 .privacy-card {
-  background: rgba(30, 41, 59, 0.8);
-  border: 1px solid var(--border-primary);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(10px);
-  transition: all var(--transition-normal);
+  background: var(--bg-glass-strong);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  transition: all var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.privacy-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, 
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(0, 0, 0, 0.03) 100%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-smooth);
+}
+
+[data-theme="dark"] .privacy-card::before {
+  background: linear-gradient(145deg, 
+    rgba(255, 255, 255, 0.05) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
 }
 
 .privacy-card:hover {
-  box-shadow: var(--shadow-lg);
-  border-color: var(--border-secondary);
-  transform: translateY(-2px);
+  background: var(--bg-glass);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--accent-primary);
+  transform: translateY(-4px) scale(1.02);
 }
 
+.privacy-card:hover::before {
+  opacity: 1;
+}
+
+/* Enhanced glass effect */
+.privacy-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 20%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0.6) 80%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity var(--transition-smooth);
+}
+
+[data-theme="dark"] .privacy-card::after {
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.2) 80%,
+    transparent 100%
+  );
+}
+
+.privacy-card:hover::after {
+  opacity: 1;
+}
+
+/* 玻璃态效果 */
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .glassmorphism {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Apple-style primary button */
 .privacy-button-primary {
-  background: var(--accent-primary);
-  color: var(--text-primary);
-  border: none;
-  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  color: white;
+  border: 1px solid var(--accent-primary);
+  border-radius: var(--radius-md);
   padding: var(--spacing-md) var(--spacing-xl);
   font-family: var(--font-family-body);
-  font-weight: 500;
+  font-weight: 600;
   font-size: 14px;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-smooth);
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md), 0 0 0 0 rgba(0, 122, 255, 0);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+}
+
+.privacy-button-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, 
+    rgba(255, 255, 255, 0.2) 0%, 
+    transparent 50%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity var(--transition-smooth);
 }
 
 .privacy-button-primary:hover {
-  background: var(--accent-hover);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--shadow-lg), 0 0 0 4px rgba(0, 122, 255, 0.2);
+  border-color: var(--accent-hover);
 }
 
+.privacy-button-primary:hover::before {
+  opacity: 1;
+}
+
+.privacy-button-primary:active {
+  transform: translateY(-1px) scale(1.01);
+  transition: all var(--transition-quick);
+}
+
+/* Apple-style secondary button */
 .privacy-button-secondary {
-  background: transparent;
-  color: var(--text-secondary);
-  border: 1px solid var(--border-primary);
-  border-radius: var(--radius-sm);
+  background: var(--bg-glass);
+  color: var(--text-primary);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
   padding: var(--spacing-md) var(--spacing-xl);
   font-family: var(--font-family-body);
   font-weight: 500;
   font-size: 14px;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-smooth);
   cursor: pointer;
+  position: relative;
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+  box-shadow: var(--shadow-sm);
+}
+
+.privacy-button-secondary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, 
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.02) 100%
+  );
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity var(--transition-smooth);
+}
+
+[data-theme="dark"] .privacy-button-secondary::before {
+  background: linear-gradient(145deg, 
+    rgba(255, 255, 255, 0.04) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
 }
 
 .privacy-button-secondary:hover {
-  background: var(--bg-tertiary);
-  border-color: var(--border-secondary);
+  background: var(--bg-glass-strong);
+  border-color: var(--accent-primary);
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: var(--shadow-md), 0 0 0 2px rgba(0, 122, 255, 0.1);
 }
 
+.privacy-button-secondary:hover::before {
+  opacity: 1;
+}
+
+.privacy-button-secondary:active {
+  transform: translateY(0) scale(1);
+  transition: all var(--transition-quick);
+}
+
+/* Apple-style progress bar */
 .privacy-progress-bar {
-  background: var(--bg-tertiary);
-  border-radius: var(--radius-sm);
+  background: var(--bg-glass);
+  border-radius: var(--radius-md);
   overflow: hidden;
-  height: 6px;
+  height: 8px;
+  border: 1px solid var(--border-glass);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+  position: relative;
+}
+
+.privacy-progress-bar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.02) 100%
+  );
+  border-radius: inherit;
 }
 
 .privacy-progress-fill {
-  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  background: linear-gradient(90deg, 
+    var(--accent-primary) 0%, 
+    var(--accent-secondary) 60%,
+    var(--accent-indigo) 100%
+  );
   height: 100%;
-  transition: width var(--transition-normal);
+  transition: width var(--transition-smooth);
+  border-radius: inherit;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+}
+
+.privacy-progress-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  border-radius: inherit;
 }
 
 .privacy-status-success {
@@ -249,5 +500,252 @@ body {
   .privacy-button-secondary {
     padding: var(--spacing-sm) var(--spacing-md);
     font-size: 12px;
+  }
+}
+
+/* 新增动画效果 */
+.animate-bounce-subtle {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out;
+}
+
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.05) 20%,
+    rgba(255, 255, 255, 0.1) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* 骨架屏样式 */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.05) 20%,
+    rgba(255, 255, 255, 0.1) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: skeleton-shimmer 2s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* 平滑滚动 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 改进的焦点样式 */
+*:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* 状态指示器样式 */
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+
+.status-indicator::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+.status-indicator.success {
+  background: var(--success);
+}
+
+.status-indicator.success::before {
+  background: var(--success);
+}
+
+.status-indicator.warning {
+  background: var(--warning);
+}
+
+.status-indicator.warning::before {
+  background: var(--warning);
+}
+
+.status-indicator.error {
+  background: var(--error);
+}
+
+.status-indicator.error::before {
+  background: var(--error);
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+}
+
+/* Apple-style gradient mesh background */
+.gradient-mesh {
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, var(--accent-blue) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, var(--accent-purple) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, var(--accent-indigo) 0%, transparent 50%),
+    radial-gradient(circle at 60% 90%, var(--accent-mint) 0%, transparent 50%);
+  opacity: 0.08;
+  pointer-events: none;
+  animation: mesh-float 20s ease-in-out infinite;
+}
+
+[data-theme="dark"] .gradient-mesh {
+  opacity: 0.04;
+}
+
+@keyframes mesh-float {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+/* Enhanced mesh for hero sections */
+.gradient-mesh-hero {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 800px 400px at 50% 0%, var(--accent-blue) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 300px at 0% 100%, var(--accent-purple) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 200px at 100% 50%, var(--accent-indigo) 0%, transparent 70%);
+  opacity: 0.12;
+  pointer-events: none;
+  animation: mesh-float 30s ease-in-out infinite reverse;
+}
+
+[data-theme="dark"] .gradient-mesh-hero {
+  opacity: 0.06;
+}
+
+/* 文本渐变 */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 改进的聚焦样式 */
+.focus-ring {
+  outline: none;
+  position: relative;
+}
+
+.focus-ring:focus-visible::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px solid var(--accent-primary);
+  border-radius: calc(var(--radius-sm) + 4px);
+  opacity: 0;
+  animation: focus-fade-in 0.2s forwards;
+}
+
+@keyframes focus-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* 禁用动画（用于可访问性） */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

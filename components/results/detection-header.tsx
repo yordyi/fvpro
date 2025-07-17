@@ -90,34 +90,34 @@ function StatusStats({ stats }: { stats: { safe: number; warning: number; error:
   const total = stats.safe + stats.warning + stats.error
   
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-3 sm:gap-4 md:gap-6">
       <div className="flex items-center gap-2">
         <CheckCircle className="w-5 h-5 text-success" />
         <div className="text-center">
-          <div className="text-lg font-semibold privacy-text-heading text-success">
+          <div className="text-base sm:text-lg font-semibold privacy-text-heading text-success">
             {stats.safe}
           </div>
-          <div className="text-xs privacy-text-body opacity-60">安全</div>
+          <div className="text-xs privacy-text-body opacity-60 hidden sm:block">安全</div>
         </div>
       </div>
       
       <div className="flex items-center gap-2">
         <AlertTriangle className="w-5 h-5 text-warning" />
         <div className="text-center">
-          <div className="text-lg font-semibold privacy-text-heading text-warning">
+          <div className="text-base sm:text-lg font-semibold privacy-text-heading text-warning">
             {stats.warning}
           </div>
-          <div className="text-xs privacy-text-body opacity-60">警告</div>
+          <div className="text-xs privacy-text-body opacity-60 hidden sm:block">警告</div>
         </div>
       </div>
       
       <div className="flex items-center gap-2">
         <XCircle className="w-5 h-5 text-destructive" />
         <div className="text-center">
-          <div className="text-lg font-semibold privacy-text-heading text-destructive">
+          <div className="text-base sm:text-lg font-semibold privacy-text-heading text-destructive">
             {stats.error}
           </div>
-          <div className="text-xs privacy-text-body opacity-60">错误</div>
+          <div className="text-xs privacy-text-body opacity-60 hidden sm:block">错误</div>
         </div>
       </div>
     </div>
@@ -177,11 +177,12 @@ function ActionButtons({
         whileTap={{ scale: 0.95 }}
         onClick={onRefresh}
         disabled={isRefreshing}
-        className={`p-2 rounded-lg border transition-colors ${
+        className={`p-2 rounded-lg border transition-colors touch-target ${
           isRefreshing 
             ? 'border-primary bg-primary/10 text-primary' 
             : 'border-border-primary hover:border-primary hover:bg-primary/5'
         }`}
+        aria-label="刷新检测"
       >
         <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
       </motion.button>
@@ -190,11 +191,12 @@ function ActionButtons({
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={onFilter}
-        className={`p-2 rounded-lg border transition-colors ${
+        className={`p-2 rounded-lg border transition-colors touch-target ${
           filterActive 
             ? 'border-primary bg-primary/10 text-primary' 
             : 'border-border-primary hover:border-primary hover:bg-primary/5'
         }`}
+        aria-label="筛选结果"
       >
         <Filter className="w-4 h-4" />
       </motion.button>
@@ -203,10 +205,11 @@ function ActionButtons({
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={onExport}
-        className="privacy-button-secondary px-4 py-2 text-sm flex items-center gap-2"
+        className="privacy-button-secondary px-3 sm:px-4 py-2 text-sm flex items-center gap-2"
       >
         <Download className="w-4 h-4" />
-        导出报告
+        <span className="hidden sm:inline">导出报告</span>
+        <span className="sm:hidden">导出</span>
       </motion.button>
     </div>
   )
@@ -242,9 +245,9 @@ export function DetectionHeader({
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="privacy-card p-6 mb-8"
+      className="privacy-card p-4 sm:p-6 mb-4 sm:mb-6 md:mb-8"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-center">
         {/* 安全评分 */}
         <div className="flex flex-col items-center lg:items-start">
           <div className="mb-4">

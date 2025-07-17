@@ -232,17 +232,17 @@ export function DetectionCard({
       className={`privacy-card transition-all duration-300 hover:shadow-lg ${colors.bg} ${colors.border}`}
     >
       {/* 卡片头部 */}
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className={`p-2 rounded-lg ${colors.bg}`}>
               <ResultIcon className={`w-5 h-5 ${colors.text}`} />
             </div>
             <div>
-              <h3 className="privacy-text-heading text-lg font-semibold">
+              <h3 className="privacy-text-heading text-base sm:text-lg font-semibold">
                 {result.title}
               </h3>
-              <p className="privacy-text-body text-sm opacity-80">
+              <p className="privacy-text-body text-xs sm:text-sm opacity-80 hidden sm:block">
                 {result.description}
               </p>
             </div>
@@ -274,8 +274,8 @@ export function DetectionCard({
         {/* 分数条 */}
         <ScoreBar score={result.score} status={result.status} />
         
-        {/* 快速指标 */}
-        <div className="mt-4 grid grid-cols-2 gap-4">
+        {/* 快速指标 - 移动端隐藏 */}
+        <div className="mt-4 grid grid-cols-2 gap-4 hidden sm:grid">
           {result.details.metrics.slice(0, 2).map((metric, index) => (
             <MetricItem key={index} metric={metric} />
           ))}
@@ -292,7 +292,7 @@ export function DetectionCard({
             transition={{ duration: 0.3 }}
             className="border-t border-border-primary"
           >
-            <div className="p-6 space-y-6">
+            <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
               {/* 详细摘要 */}
               <div>
                 <h4 className="privacy-text-heading font-semibold mb-2 flex items-center gap-2">

@@ -1,5 +1,5 @@
 import { calculateSecurityScore } from '../scoring'
-import { IPDetectionResult, WebRTCResult, FingerprintResult, BrowserResult } from '@/lib/types/detection'
+import { IPDetectionResult, WebRTCResult, FingerprintResult, BrowserResult, DNSResult, IPv6Result } from '@/lib/types/detection'
 
 describe('calculateSecurityScore', () => {
   const mockIPResult: IPDetectionResult = {
@@ -7,6 +7,23 @@ describe('calculateSecurityScore', () => {
     detectedIPs: [{ ip: '192.168.1.1', source: 'test' }],
     isConsistent: true,
     isVPN: false,
+    isProxy: false,
+    isTor: false,
+    isHosting: false,
+  }
+  
+  const mockDNSResult: DNSResult = {
+    hasDNSLeak: false,
+    dnsServers: ['1.1.1.1', '1.0.0.1'],
+    isUsingVPNDNS: false,
+  }
+  
+  const mockIPv6Result: IPv6Result = {
+    hasIPv6: false,
+    hasIPv6Leak: false,
+    ipv6Addresses: [],
+    ipv4Addresses: ['192.168.1.1'],
+    isIPv6Disabled: true,
   }
 
   const mockWebRTCResult: WebRTCResult = {
@@ -45,6 +62,8 @@ describe('calculateSecurityScore', () => {
       webrtcResult: mockWebRTCResult,
       fingerprintResult: { ...mockFingerprintResult, uniquenessScore: 0 },
       browserResult: mockBrowserResult,
+      dnsResult: mockDNSResult,
+      ipv6Result: mockIPv6Result,
     })
 
     expect(result.total).toBeGreaterThan(80)
@@ -79,11 +98,27 @@ describe('calculateSecurityScore', () => {
       plugins: ['Flash', 'Java', 'Silverlight'],
     }
 
+    const poorDNSResult: DNSResult = {
+      hasDNSLeak: true,
+      dnsServers: ['192.168.1.1', '8.8.8.8'],
+      isUsingVPNDNS: false,
+    }
+    
+    const poorIPv6Result: IPv6Result = {
+      hasIPv6: true,
+      hasIPv6Leak: true,
+      ipv6Addresses: ['2001:db8::1'],
+      ipv4Addresses: ['192.168.1.1'],
+      isIPv6Disabled: false,
+    }
+
     const result = calculateSecurityScore({
       ipResult: poorIPResult,
       webrtcResult: poorWebRTCResult,
       fingerprintResult: poorFingerprintResult,
       browserResult: poorBrowserResult,
+      dnsResult: poorDNSResult,
+      ipv6Result: poorIPv6Result,
     })
 
     expect(result.total).toBeLessThan(50)
@@ -102,6 +137,8 @@ describe('calculateSecurityScore', () => {
       webrtcResult: avgWebRTCResult,
       fingerprintResult: mockFingerprintResult,
       browserResult: mockBrowserResult,
+      dnsResult: mockDNSResult,
+      ipv6Result: mockIPv6Result,
     })
 
     expect(result.total).toBeGreaterThanOrEqual(50)
@@ -115,12 +152,16 @@ describe('calculateSecurityScore', () => {
       webrtcResult: mockWebRTCResult,
       fingerprintResult: mockFingerprintResult,
       browserResult: mockBrowserResult,
+      dnsResult: mockDNSResult,
+      ipv6Result: mockIPv6Result,
     })
 
     expect(result.breakdown).toHaveProperty('ipPrivacy')
     expect(result.breakdown).toHaveProperty('webrtcProtection')
     expect(result.breakdown).toHaveProperty('fingerprintResistance')
     expect(result.breakdown).toHaveProperty('browserHardening')
+    expect(result.breakdown).toHaveProperty('dnsPrivacy')
+    expect(result.breakdown).toHaveProperty('ipv6Protection')
     
     // All scores should be between 0 and 100
     Object.values(result.breakdown).forEach(score => {

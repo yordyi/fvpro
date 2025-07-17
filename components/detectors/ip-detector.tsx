@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Shield, Globe, MapPin } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Progress } from '@/components/ui/progress'
 
 interface IPDetectionState {
   isLoading: boolean

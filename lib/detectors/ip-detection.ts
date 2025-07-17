@@ -3,17 +3,27 @@ export interface IPInfo {
   source: string
 }
 
-export async function detectIP(): Promise<{
+export interface IPDetectionResult {
   clientIP: string
   detectedIPs: IPInfo[]
   isConsistent: boolean
   isVPN: boolean
+  isProxy: boolean
+  isTor: boolean
+  isHosting: boolean
   location?: {
     country: string
+    countryCode?: string
     city: string
     region: string
+    timezone?: string
+    latitude?: number
+    longitude?: number
+    isp?: string
   }
-}> {
+}
+
+export async function detectIP(): Promise<IPDetectionResult> {
   try {
     // 调用我们的API端点
     const response = await fetch('/api/detect-ip')

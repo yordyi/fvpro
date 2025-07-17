@@ -217,7 +217,7 @@ export function FeatureCards() {
   const isInView = useInView(ref, { once: true, amount: 0.1 })
 
   return (
-    <section ref={ref} className="py-20 px-4">
+    <section ref={ref} className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* 标题部分 */}
         <motion.div
@@ -226,7 +226,7 @@ export function FeatureCards() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold privacy-text-heading mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold privacy-text-heading mb-4 sm:mb-6">
             全面的隐私检测
           </h2>
           <p className="text-lg md:text-xl privacy-text-body max-w-3xl mx-auto opacity-80">
@@ -235,7 +235,7 @@ export function FeatureCards() {
         </motion.div>
 
         {/* 功能卡片网格 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="feature-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {features.map((feature, index) => (
             <FeatureCard key={feature.id} feature={feature} index={index} />
           ))}

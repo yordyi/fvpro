@@ -2,31 +2,37 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Shield, Menu, X, ChevronDown } from 'lucide-react'
+import { Shield, ChevronDown } from 'lucide-react'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { LanguageToggle } from '@/components/ui/language-toggle'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { MobileMenuButton, MobileSideMenu, useTouchGestures } from './mobile-nav'
 
-// 导航链接数据
-const navLinks = [
-  { name: '隐私检测', href: '/' },
-  { name: '检测结果', href: '/results' },
-  { name: '历史记录', href: '/history' },
-  { 
-    name: '资源', 
-    href: '#',
-    dropdown: [
-      { name: '用户指南', href: '/guide' },
-      { name: '隐私教育', href: '/education' },
-      { name: '常见问题', href: '/faq' },
-      { name: '设计系统', href: '/design-system' }
-    ]
-  },
-  { name: '关于', href: '/about' }
-]
+function useNavLinks() {
+  const t = useTranslations('navigation')
+  
+  return [
+    { name: t('home'), href: '/' },
+    { name: t('results'), href: '/results' },
+    { name: t('history'), href: '/history' },
+    { 
+      name: t('resources'), 
+      href: '#',
+      dropdown: [
+        { name: t('guide'), href: '/guide' },
+        { name: t('education'), href: '/education' },
+        { name: t('faq'), href: '/faq' },
+        { name: t('design'), href: '/design-system' }
+      ]
+    },
+    { name: t('about'), href: '/about' }
+  ]
+}
 
 // 下拉菜单组件
 function DropdownMenu({ item, isOpen, onToggle }: { 
-  item: typeof navLinks[2]; 
+  item: any; 
   isOpen: boolean; 
   onToggle: () => void 
 }) {
@@ -66,84 +72,16 @@ function DropdownMenu({ item, isOpen, onToggle }: {
   )
 }
 
-// 移动端菜单组件
-function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* 背景遮罩 */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-            onClick={onClose}
-          />
-          
-          {/* 菜单面板 */}
-          <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'tween', duration: 0.3 }}
-            className="fixed top-0 right-0 h-full w-80 bg-background-secondary/95 backdrop-blur-md border-l border-border-primary z-50"
-          >
-            <div className="p-6">
-              {/* 关闭按钮 */}
-              <div className="flex justify-end mb-8">
-                <button
-                  onClick={onClose}
-                  className="p-2 hover:bg-background-tertiary rounded-lg transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-              
-              {/* 菜单链接 */}
-              <nav className="space-y-6">
-                {navLinks.map((item) => (
-                  <div key={item.name}>
-                    {item.dropdown ? (
-                      <div className="space-y-2">
-                        <div className="privacy-text-body font-medium text-text-primary">{item.name}</div>
-                        <div className="pl-4 space-y-2">
-                          {item.dropdown.map((dropdownItem) => (
-                            <Link
-                              key={dropdownItem.name}
-                              href={dropdownItem.href}
-                              className="block privacy-text-body text-sm opacity-80 hover:opacity-100 hover:text-primary transition-colors py-1"
-                              onClick={onClose}
-                            >
-                              {dropdownItem.name}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    ) : (
-                      <Link
-                        href={item.href}
-                        className="block privacy-text-body text-lg hover:text-primary transition-colors py-2"
-                        onClick={onClose}
-                      >
-                        {item.name}
-                      </Link>
-                    )}
-                  </div>
-                ))}
-              </nav>
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
-  )
-}
 
 export function Header() {
+  const t = useTranslations('app')
+  const navLinks = useNavLinks()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  
+  // 触摸手势支持
+  useTouchGestures(() => setIsMobileMenuOpen(true))
 
   // 监听滚动以改变头部透明度
   useEffect(() => {
@@ -192,7 +130,7 @@ export function Header() {
               <Shield className="h-6 w-6 text-primary" />
             </motion.div>
             <span className="privacy-text-heading text-xl font-bold">
-              Privacy Guardian
+              {t('title')}
             </span>
           </Link>
           
@@ -216,24 +154,24 @@ export function Header() {
                 )}
               </div>
             ))}
+            <LanguageToggle />
             <ThemeToggle />
           </nav>
 
           {/* 移动端菜单按钮 */}
           <div className="md:hidden flex items-center space-x-4">
+            <LanguageToggle />
             <ThemeToggle />
-            <button
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 hover:bg-background-tertiary rounded-lg transition-colors"
-            >
-              <Menu className="w-6 h-6" />
-            </button>
+            <MobileMenuButton 
+              isOpen={isMobileMenuOpen}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            />
           </div>
         </div>
       </motion.header>
 
       {/* 移动端菜单 */}
-      <MobileMenu 
+      <MobileSideMenu 
         isOpen={isMobileMenuOpen} 
         onClose={() => setIsMobileMenuOpen(false)} 
       />

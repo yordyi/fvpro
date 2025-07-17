@@ -4,11 +4,51 @@ export interface IPv6Result {
   ipv6Addresses: string[]
   ipv4Addresses: string[]
   isIPv6Disabled: boolean
+  leakType?: string | null
+  leakDetails?: string[]
+  recommendations?: string[]
+  locationData?: {
+    ipv6: Array<{
+      ip: string
+      country: string
+      city: string
+      region: string
+      isp: string
+      latitude?: number
+      longitude?: number
+    }>
+    ipv4: Array<{
+      ip: string
+      country: string
+      city: string
+      region: string
+      isp: string
+      latitude?: number
+      longitude?: number
+    }>
+  }
+  detectionSources?: {
+    ipv6: Array<{
+      ip?: string
+      source: string
+      success: boolean
+      error?: string
+    }>
+    ipv4: Array<{
+      ip?: string
+      source: string
+      success: boolean
+      error?: string
+    }>
+  }
   error?: string
 }
 
 export async function detectIPv6Leak(): Promise<IPv6Result> {
   try {
+    // 先执行客户端检测
+    const clientTest = await performClientIPv6Test()
+    
     // 通过 API 端点检测 IPv6
     const response = await fetch('/api/detect-ipv6')
     const data = await response.json()
@@ -17,7 +57,28 @@ export async function detectIPv6Leak(): Promise<IPv6Result> {
       throw new Error(data.error || 'IPv6 检测失败')
     }
     
-    return data.data
+    // 合并客户端和服务端结果
+    const result = {
+      ...data.data,
+      clientTest,
+      // 如果客户端检测到IPv6但服务端没有，可能存在配置问题
+      configMismatch: clientTest.hasIPv6Support && !data.data.hasIPv6
+    }
+    
+    // 添加额外的建议
+    if (result.configMismatch) {
+      result.recommendations = result.recommendations || []
+      result.recommendations.push('客户端支持IPv6但服务端未检测到，请检查网络配置')
+    }
+    
+    // 如果检测到WebRTC IPv6泄露，添加到泄露详情
+    if (clientTest.webRTCIPv6) {
+      result.leakDetails = result.leakDetails || []
+      result.leakDetails.push('WebRTC正在泄露IPv6地址')
+      result.hasIPv6Leak = true
+    }
+    
+    return result
   } catch (error) {
     console.error('IPv6 检测错误:', error)
     return {
@@ -29,6 +90,118 @@ export async function detectIPv6Leak(): Promise<IPv6Result> {
       error: error instanceof Error ? error.message : '未知错误'
     }
   }
+}
+
+// 客户端IPv6测试
+async function performClientIPv6Test(): Promise<{
+  hasIPv6Support: boolean
+  webRTCIPv6: boolean
+  dnsIPv6: boolean
+  isProtected: boolean
+}> {
+  const result = {
+    hasIPv6Support: false,
+    webRTCIPv6: false,
+    dnsIPv6: false,
+    isProtected: true
+  }
+  
+  try {
+    // 检测浏览器是否支持IPv6
+    // 尝试连接到已知的IPv6测试服务器
+    const ipv6TestUrls = [
+      'https://v6.ipv6-test.com/api/myip.php',
+      'https://ipv6.icanhazip.com'
+    ]
+    
+    const ipv6Tests = await Promise.allSettled(
+      ipv6TestUrls.map(url => 
+        fetch(url, { 
+          method: 'HEAD',
+          mode: 'no-cors',
+          cache: 'no-cache'
+        })
+      )
+    )
+    
+    // 如果任何测试成功，说明支持IPv6
+    result.hasIPv6Support = ipv6Tests.some(test => test.status === 'fulfilled')
+    
+    // WebRTC IPv6泄露检测
+    if (typeof RTCPeerConnection !== 'undefined') {
+      try {
+        const pc = new RTCPeerConnection({
+          iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+        })
+        
+        pc.createDataChannel('')
+        const offer = await pc.createOffer()
+        await pc.setLocalDescription(offer)
+        
+        // 收集IPv6候选
+        const ipv6Candidates = await new Promise<string[]>((resolve) => {
+          const candidates: string[] = []
+          let timeout: NodeJS.Timeout
+          
+          pc.onicecandidate = (event) => {
+            if (event.candidate) {
+              const candidate = event.candidate.candidate
+              // 检查是否包含IPv6地址
+              const ipv6Match = candidate.match(/([0-9a-fA-F:]+:+[0-9a-fA-F:]+)/)
+              if (ipv6Match) {
+                candidates.push(ipv6Match[1])
+              }
+            }
+          }
+          
+          pc.onicegatheringstatechange = () => {
+            if (pc.iceGatheringState === 'complete') {
+              clearTimeout(timeout)
+              resolve(candidates)
+            }
+          }
+          
+          timeout = setTimeout(() => resolve(candidates), 3000)
+        })
+        
+        pc.close()
+        
+        if (ipv6Candidates.length > 0) {
+          result.webRTCIPv6 = true
+          result.isProtected = false
+        }
+      } catch (error) {
+        console.error('WebRTC IPv6检测失败:', error)
+      }
+    }
+    
+    // DNS IPv6检测 - 检查是否返回AAAA记录
+    try {
+      // 使用一个已知同时有IPv4和IPv6的域名
+      const testDomain = 'ipv6.google.com'
+      const img = new Image()
+      img.src = `https://${testDomain}/favicon.ico?t=${Date.now()}`
+      
+      // 如果能够加载，可能使用了IPv6
+      await new Promise((resolve, reject) => {
+        img.onload = resolve
+        img.onerror = reject
+        setTimeout(reject, 2000)
+      })
+      
+      // 如果成功加载且支持IPv6，可能有DNS IPv6
+      if (result.hasIPv6Support) {
+        result.dnsIPv6 = true
+      }
+    } catch {
+      // 加载失败是正常的
+    }
+    
+  } catch (error) {
+    console.error('客户端IPv6测试失败:', error)
+  }
+  
+  return result
 }
 
 export function analyzeIPv6Privacy(ipv6Result: IPv6Result): {

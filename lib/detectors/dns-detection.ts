@@ -2,11 +2,27 @@ export interface DNSResult {
   hasDNSLeak: boolean
   dnsServers: string[]
   isUsingVPNDNS: boolean
-  dnsLocation?: {
+  dnsLocation?: Array<{
+    server: string
     country: string
     city: string
+    region?: string
     isp: string
+    latitude?: number
+    longitude?: number
+  }>
+  ipInfo?: {
+    ip: string
+    country: string
+    city: string
+    region: string
+    isp: string
+    isVPN: boolean
+    isProxy: boolean
   }
+  leakDetails?: string[]
+  recommendations?: string[]
+  testId?: string
   error?: string
 }
 
@@ -19,7 +35,41 @@ const DNS_CHECK_SERVICES = [
 
 export async function detectDNSLeak(): Promise<DNSResult> {
   try {
-    // 通过我们的 API 路由进行 DNS 检测
+    // 动态导入客户端辅助函数（仅在客户端执行）
+    if (typeof window !== 'undefined') {
+      const { comprehensiveDNSLeakTest } = await import('./dns-client-helper')
+      
+      // 生成测试ID
+      const testId = Math.random().toString(36).substring(2, 15)
+      
+      // 执行客户端DNS测试
+      const clientResults = await comprehensiveDNSLeakTest(testId)
+      
+      // 将客户端结果发送到服务器进行综合分析
+      const response = await fetch('/api/detect-dns', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          testId,
+          clientResults
+        })
+      })
+      
+      if (!response.ok) {
+        throw new Error('服务器响应错误')
+      }
+      
+      const serverAnalysis = await response.json()
+      
+      // 如果服务器返回了分析结果，使用服务器的结果
+      if (serverAnalysis.success && serverAnalysis.data) {
+        return serverAnalysis.data
+      }
+    }
+    
+    // 退回到仅服务端检测
     const response = await fetch('/api/detect-dns')
     const data = await response.json()
     

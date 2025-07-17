@@ -146,10 +146,10 @@ function CategorySection({
                 <Icon className={`w-5 h-5 ${config.color}`} />
               </div>
               <div className="text-left">
-                <h3 className="privacy-text-heading text-lg font-semibold">
+                <h3 className="privacy-text-heading text-base sm:text-lg font-semibold">
                   {config.title}
                 </h3>
-                <p className="privacy-text-body text-sm opacity-80">
+                <p className="privacy-text-body text-xs sm:text-sm opacity-80 hidden sm:block">
                   {config.description}
                 </p>
               </div>
@@ -163,8 +163,8 @@ function CategorySection({
           </div>
           
           <div className="flex items-center gap-4">
-            {/* 统计信息 */}
-            <div className="flex items-center gap-3 text-sm">
+            {/* 统计信息 - 移动端简化 */}
+            <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm">
               <div className="flex items-center gap-1">
                 <div className="w-2 h-2 bg-success rounded-full" />
                 <span className="privacy-text-body opacity-80">
@@ -206,7 +206,7 @@ function CategorySection({
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+            className="detection-grid grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6"
           >
             {results.map((result) => (
               <DetectionCard

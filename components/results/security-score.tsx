@@ -3,14 +3,22 @@
 import { DetectionResults } from '@/lib/types/detection'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import { Shield, AlertTriangle, CheckCircle } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Shield, AlertTriangle, CheckCircle, Download, RefreshCw } from 'lucide-react'
+import { exportReportAsPDF } from '@/lib/utils/pdf-export'
+import { useTranslations, useLocale } from 'next-intl'
+import { useState } from 'react'
 
 interface SecurityScoreProps {
   results: DetectionResults
+  onReset?: () => void
 }
 
-export function SecurityScore({ results }: SecurityScoreProps) {
+export function SecurityScore({ results, onReset }: SecurityScoreProps) {
+  const t = useTranslations()
+  const locale = useLocale()
   const { score } = results
+  const [isExporting, setIsExporting] = useState(false)
 
   const getScoreColor = (value: number) => {
     if (value >= 80) return 'text-green-400'
@@ -25,19 +33,57 @@ export function SecurityScore({ results }: SecurityScoreProps) {
   }
 
   const getScoreMessage = () => {
-    if (score.total >= 80) return '您的隐私保护良好'
-    if (score.total >= 50) return '您的隐私保护一般，建议改进'
-    return '您的隐私保护较弱，需要加强'
+    if (score.total >= 80) return t('security.score.excellent')
+    if (score.total >= 50) return t('security.score.good')  
+    if (score.total >= 30) return t('security.score.fair')
+    return t('security.score.poor')
+  }
+
+  const handleExportPDF = async () => {
+    setIsExporting(true)
+    try {
+      const filename = `${t('export.filename')}-${new Date().toISOString().split('T')[0]}.pdf`
+      await exportReportAsPDF(results, filename)
+    } catch (error) {
+      console.error('PDF export failed:', error)
+    } finally {
+      setIsExporting(false)
+    }
   }
 
   return (
     <div className="space-y-6">
       <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
         <CardHeader>
-          <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
-            <Shield className="w-5 h-5" />
-            <span>隐私安全评分</span>
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
+              <Shield className="w-5 h-5" />
+              <span>{t('detection.score')}</span>
+            </CardTitle>
+            <div className="flex items-center gap-2">
+              {onReset && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onReset}
+                  className="h-8"
+                >
+                  <RefreshCw className="w-4 h-4 mr-1" />
+                  {t('detection.reset')}
+                </Button>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleExportPDF}
+                disabled={isExporting}
+                className="h-8"
+              >
+                <Download className="w-4 h-4 mr-1" />
+                {isExporting ? t('export.generating') : t('export.pdf')}
+              </Button>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center mb-6">
@@ -58,7 +104,7 @@ export function SecurityScore({ results }: SecurityScoreProps) {
           <div className="space-y-4">
             <div>
               <div className="flex justify-between text-sm mb-1">
-                <span className="text-slate-600 dark:text-slate-400">IP隐私保护</span>
+                <span className="text-slate-600 dark:text-slate-400">{t('categories.ip')}</span>
                 <span className={getScoreColor(score.breakdown.ipPrivacy)}>
                   {score.breakdown.ipPrivacy}%
                 </span>
@@ -68,7 +114,7 @@ export function SecurityScore({ results }: SecurityScoreProps) {
 
             <div>
               <div className="flex justify-between text-sm mb-1">
-                <span className="text-slate-600 dark:text-slate-400">WebRTC防护</span>
+                <span className="text-slate-600 dark:text-slate-400">{t('categories.webrtc')}</span>
                 <span className={getScoreColor(score.breakdown.webrtcProtection)}>
                   {score.breakdown.webrtcProtection}%
                 </span>
@@ -78,7 +124,7 @@ export function SecurityScore({ results }: SecurityScoreProps) {
 
             <div>
               <div className="flex justify-between text-sm mb-1">
-                <span className="text-slate-600 dark:text-slate-400">DNS隐私</span>
+                <span className="text-slate-600 dark:text-slate-400">{t('categories.dns')}</span>
                 <span className={getScoreColor(score.breakdown.dnsPrivacy)}>
                   {score.breakdown.dnsPrivacy}%
                 </span>
@@ -88,7 +134,7 @@ export function SecurityScore({ results }: SecurityScoreProps) {
 
             <div>
               <div className="flex justify-between text-sm mb-1">
-                <span className="text-slate-600 dark:text-slate-400">IPv6防护</span>
+                <span className="text-slate-600 dark:text-slate-400">{t('categories.ipv6')}</span>
                 <span className={getScoreColor(score.breakdown.ipv6Protection)}>
                   {score.breakdown.ipv6Protection}%
                 </span>
@@ -98,7 +144,7 @@ export function SecurityScore({ results }: SecurityScoreProps) {
 
             <div>
               <div className="flex justify-between text-sm mb-1">
-                <span className="text-slate-600 dark:text-slate-400">指纹抗性</span>
+                <span className="text-slate-600 dark:text-slate-400">{t('categories.fingerprint')}</span>
                 <span className={getScoreColor(score.breakdown.fingerprintResistance)}>
                   {score.breakdown.fingerprintResistance}%
                 </span>
@@ -108,7 +154,7 @@ export function SecurityScore({ results }: SecurityScoreProps) {
 
             <div>
               <div className="flex justify-between text-sm mb-1">
-                <span className="text-slate-600 dark:text-slate-400">浏览器加固</span>
+                <span className="text-slate-600 dark:text-slate-400">{t('categories.browser')}</span>
                 <span className={getScoreColor(score.breakdown.browserHardening)}>
                   {score.breakdown.browserHardening}%
                 </span>
@@ -119,12 +165,11 @@ export function SecurityScore({ results }: SecurityScoreProps) {
 
           <div className="mt-6 p-4 bg-slate-100 dark:bg-slate-900 rounded-lg">
             <div className="text-slate-700 dark:text-slate-300 text-sm">
-              <div className="font-medium mb-2">安全等级: {
-                score.level === 'high' ? '高' :
-                score.level === 'medium' ? '中' : '低'
-              }</div>
+              <div className="font-medium mb-2">
+                {t('detection.level')}: {t(`security.level.${score.level}`)}
+              </div>
               <div className="text-slate-500 dark:text-slate-400 text-xs">
-                检测时间: {new Date(results.timestamp).toLocaleString('zh-CN')}
+                {t('detection.timestamp')}: {new Date(results.timestamp).toLocaleString(locale)}
               </div>
             </div>
           </div>

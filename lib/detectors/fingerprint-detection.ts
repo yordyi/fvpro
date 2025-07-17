@@ -1,3 +1,5 @@
+import { getFingerprintWorker } from '@/lib/workers/fingerprint-worker-client'
+
 export interface FingerprintResult {
   canvasFingerprint: string
   webglFingerprint: string
@@ -8,11 +10,47 @@ export interface FingerprintResult {
 }
 
 export async function detectFingerprint(): Promise<FingerprintResult> {
-  const canvas = await generateCanvasFingerprint()
-  const webgl = await generateWebGLFingerprint()
-  const audio = await generateAudioFingerprint()
-  const fonts = await detectFonts()
-  const screen = generateScreenFingerprint()
+  const worker = getFingerprintWorker()
+  
+  // Try to use Web Worker for canvas fingerprint
+  let canvas: string
+  if (worker.isAvailable()) {
+    try {
+      canvas = await worker.generateCanvasFingerprint()
+    } catch (error) {
+      console.warn('Worker canvas generation failed, falling back:', error)
+      canvas = await generateCanvasFingerprint()
+    }
+  } else {
+    canvas = await generateCanvasFingerprint()
+  }
+  
+  // Run other detections in parallel
+  const [webgl, audio, fonts, screen] = await Promise.all([
+    generateWebGLFingerprint(),
+    generateAudioFingerprint(),
+    detectFonts(),
+    generateScreenFingerprint()
+  ])
+
+  // Try to use Web Worker for score calculation
+  let uniquenessScore: number
+  if (worker.isAvailable()) {
+    try {
+      uniquenessScore = await worker.calculateUniquenessScore({
+        canvas, webgl, audio, fonts, screen
+      })
+    } catch (error) {
+      console.warn('Worker score calculation failed, falling back:', error)
+      uniquenessScore = calculateUniquenessScore({
+        canvas, webgl, audio, fonts, screen
+      })
+    }
+  } else {
+    uniquenessScore = calculateUniquenessScore({
+      canvas, webgl, audio, fonts, screen
+    })
+  }
 
   return {
     canvasFingerprint: canvas,
@@ -20,9 +58,7 @@ export async function detectFingerprint(): Promise<FingerprintResult> {
     audioFingerprint: audio,
     fontFingerprint: fonts,
     screenFingerprint: screen,
-    uniquenessScore: calculateUniquenessScore({
-      canvas, webgl, audio, fonts, screen
-    })
+    uniquenessScore
   }
 }
 

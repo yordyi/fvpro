@@ -139,20 +139,22 @@ export function HeroSection({ onStartDetection, isDetecting }: HeroSectionProps)
   }, [controls])
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="hero-section relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* 背景渐变 */}
       <div className="absolute inset-0 bg-gradient-primary" />
       
-      {/* 网格背景 */}
-      <div className="absolute inset-0 opacity-20" style={{
+      {/* 网格背景 - 桌面端显示 */}
+      <div className="desktop-only absolute inset-0 opacity-20" style={{
         backgroundImage: "url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%236366f1\" fill-opacity=\"0.05\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')"
       }} />
       
-      {/* 动态粒子背景 */}
-      <ParticleBackground />
+      {/* 动态粒子背景 - 桌面端显示 */}
+      <div className="desktop-only">
+        <ParticleBackground />
+      </div>
       
       {/* 主要内容 */}
-      <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center safe-area-padding">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={controls}
@@ -174,7 +176,7 @@ export function HeroSection({ onStartDetection, isDetecting }: HeroSectionProps)
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-            <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
               <GradientText>Privacy</GradientText>
               <br />
               <span className="privacy-text-heading">Guardian</span>
@@ -187,7 +189,7 @@ export function HeroSection({ onStartDetection, isDetecting }: HeroSectionProps)
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
           >
-            <p className="text-xl md:text-2xl privacy-text-body max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl md:text-2xl privacy-text-body max-w-2xl md:max-w-3xl mx-auto leading-relaxed px-4">
               全面检测您的浏览器隐私和安全状况，保护您的数字身份免受追踪和泄露
             </p>
           </motion.div>
@@ -202,7 +204,7 @@ export function HeroSection({ onStartDetection, isDetecting }: HeroSectionProps)
             <motion.button
               onClick={onStartDetection}
               disabled={isDetecting}
-              className="group relative inline-flex items-center gap-3 px-8 py-4 text-lg font-semibold rounded-xl bg-gradient-to-r from-primary to-secondary hover:from-primary-hover hover:to-primary text-white shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
+              className="group relative inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-xl bg-gradient-to-r from-primary to-secondary hover:from-primary-hover hover:to-primary text-white shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden touch-target"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >

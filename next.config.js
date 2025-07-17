@@ -1,11 +1,10 @@
+const createNextIntlPlugin = require('next-intl/plugin');
+ 
+const withNextIntl = createNextIntlPlugin();
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {},
-  // Disable problematic DevTools features
-  devIndicators: {
-    appIsrStatus: false,
-    position: 'bottom-left',
-  },
   webpack: (config, { dev }) => {
     if (dev) {
       config.watchOptions = {
@@ -35,4 +34,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+module.exports = withNextIntl(nextConfig);
